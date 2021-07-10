@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-# pip install ecdsa
-# pip install pysha3
+# pip3 install ecdsa
+# pip3 install pysha3
 
 # export ethereum account list from google BigQuery open data (https://cloud.google.com -> BigQuery cosole)
 #
