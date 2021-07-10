@@ -3,7 +3,7 @@
 # pip install ecdsa
 # pip install pysha3
 
-# export ethereum account from google BigQuery open data (https://cloud.google.com -> BigQuery cosole)
+# export ethereum account list from google BigQuery open data (https://cloud.google.com -> BigQuery cosole)
 #
 # SELECT `address`
 # FROM `bigquery-public-data.crypto_ethereum.balances`
@@ -123,13 +123,13 @@ def check_key(dict, key):
 
 print('Ethereum account search tool ver 0.1\n')
 
-#test generation from 32bytes hex string
+#ethereum account address generation test with 32bytes hex string
 get_addr_fromhexstr("0000000000000000000000000000000000000000000000000000000000000001",1)
 get_addr_fromhexstr("7777777777777777777777777777777777777777777777777777777777777777",1)
 get_addr_fromhexstr("3141592653589793238462643383279502884197169399375105820974944592",1)
 get_addr_fromhexstr("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",1)
 
-#test generation from random private key
+#ethereum account address generation test with random private key
 example()
 
 logging.info('acc list file loading..')
@@ -140,10 +140,10 @@ print(check_key(dict_from_csv, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'))
 
 logging.info('start pair guessing..')
 
-runmode = 1    # 1 for full search from startn to endn, 0 for repeeated pattern
+runmode = 1    # 1 for full searching between startn and endn, and 0 for repeated simple pattern
 
 if runmode == 0:
-    print('\nrunmode 0 : repeated pattern searching...')
+    print('\nrunmode 0 : repeated simple pattern searching...')
     for i in [1,2,4,8,16,32]:
         rangeval = (int)(math.pow(16, i)) - 1
         logging.info('range : ' + str(i) + ' ' + str(rangeval))
