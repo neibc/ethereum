@@ -3,6 +3,8 @@
 # pip3 install ecdsa
 # pip3 install pysha3
 
+# ethereum private key to public key to account address brute force attack
+#
 # export ethereum account list from google BigQuery open data (https://cloud.google.com -> BigQuery cosole)
 #
 # SELECT `address`
