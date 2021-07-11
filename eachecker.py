@@ -96,6 +96,15 @@ def get_addr_fromhexstr(priv_str, isprint=0):
 
     return addr
 
+def getrevsint(numval):
+    revs_number = 0
+
+    for i in range(0,64):
+        remainder = numval % 16
+        revs_number = (revs_number * 16) + remainder
+        numval = numval // 16
+
+    return revs_number
 
 def example():
     priv = SigningKey.generate(curve=SECP256k1)
@@ -134,13 +143,13 @@ example()
 
 logging.info('acc list file loading..')
 
-dict_from_csv = pd.read_csv('ethacclist.csv.small', dtype={'address': object}).set_index('address').T.to_dict()
+dict_from_csv = pd.read_csv('ethacclist.csv', dtype={'address': object}).set_index('address').T.to_dict()
 print('\nsample searching on the account list/richest account for dictionary validation.. 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
 print(check_key(dict_from_csv, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'))
 
 logging.info('start pair guessing..')
 
-runmode = 1    # 1 for full searching between startn and endn, and 0 for repeated simple pattern
+runmode = 2    # 1,2 for full searching between startn and endn (and 2=reversed bits mode), and 0 for repeated simple pattern
 
 if runmode == 0:
     print('\nrunmode 0 : repeated simple pattern searching...')
@@ -160,7 +169,7 @@ if runmode == 0:
                 f = open(LOGFILENAME,'a')
                 f.write(curval.to_bytes(32, byteorder='big').hex())
                 f.write('\n')
-else:
+elif runmode ==1:
     print('\nrunmode 1 : full sequence searching from startn to endn...')
 
     startn = int("0000000000000000000000000000000000000000000000000000000000000001", 16)
@@ -182,3 +191,26 @@ else:
             f = open(LOGFILENAME,'a')
             f.write(i.to_bytes(32, byteorder='big').hex())
             f.write('\n')
+else:
+    print('\nrunmode 2 : full sequence searching reverse order : 0000 -> 1000 -> 2000 -> .. 0100 .. -> 1100 -> 2100..')
+
+    startn = int("0000000000000000000000000000000000000000000000000000000000000001", 16)
+    endn = int("0000000000000000000000000000000000000000000000000000000100000000", 16)
+
+    print('\nstart num:')
+    print(startn.to_bytes(32, byteorder='big').hex())
+    print('end num:')
+    print(endn.to_bytes(32, byteorder='big').hex())
+
+    for i in range(startn, endn):
+        revsnum = getrevsint(i)
+        addr_str = get_addr(revsnum)
+        if check_key(dict_from_csv, addr_str):
+            print('BINGO:', addr_str)
+            get_addr(revsnum, 1)
+        if i % 100000 == 1:
+            logging.info(revsnum.to_bytes(32, byteorder='big').hex())
+            f = open(LOGFILENAME,'a')
+            f.write(revsnum.to_bytes(32, byteorder='big').hex())
+            f.write('\n')
+            
