@@ -24,6 +24,7 @@ import sha3
 import pandas as pd
 import logging
 import math
+import os
 
 LOGFILENAME = 'search_result.log'
 
@@ -74,6 +75,28 @@ def get_addr(priv_int, isprint=0):
         f.write(addr)
         f.write('\n')
     return addr
+
+def get_addr_from32bytes(privinp, isprint=0):
+    priv = SigningKey.from_string(privinp, curve=SECP256k1)
+    pub = priv.get_verifying_key().to_string()
+
+    keccak = sha3.keccak_256()
+    keccak.update(pub)
+    addr = '0x' + keccak.hexdigest()[24:]
+
+    if isprint!=0:
+        print("Private key:", priv.to_string().hex())
+        print("Public key: ", pub.hex())
+        print("Address0:   ", addr)
+        f = open(LOGFILENAME,'a')
+        f.write('private_key:')
+        f.write(priv.to_string().hex())
+        f.write('\n')
+        f.write('addr:')
+        f.write(addr)
+        f.write('\n')
+    return addr
+
 
 def get_addr_fromhexstr(priv_str, isprint=0):
     privinp = int(priv_str, 16).to_bytes(32, byteorder='big')
@@ -151,7 +174,7 @@ print(check_key(dict_from_csv, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'))
 
 logging.info('start pair guessing..')
 
-runmode = 2    # 1,2 for full searching between startn and endn (and 2=reversed bits mode), and 0 for repeated simple pattern
+runmode = 3    # 1,2 for full searching between startn and endn (and 2=reversed bits mode), and 0 for repeated simple pattern
 
 if runmode == 0:
     print('\nrunmode 0 : repeated simple pattern searching...')
@@ -175,7 +198,7 @@ elif runmode ==1:
     print('\nrunmode 1 : full sequence searching from startn to endn...')
 
     startn = int("0000000000000000000000000000000000000000000000000000000000000001", 16)
-    endn = int("0000000000000000000000000000000000000000000000000000000100000000", 16)
+    endn =   int("0000000000000000000000000000000000000000000000000000000100000000", 16)
 
     print('\nstart num:')
     print(startn.to_bytes(32, byteorder='big').hex())
@@ -193,11 +216,11 @@ elif runmode ==1:
             f = open(LOGFILENAME,'a')
             f.write(i.to_bytes(32, byteorder='big').hex())
             f.write('\n')
-else:
+elif runmode == 2:
     print('\nrunmode 2 : full sequence searching reverse order : 0000 -> 1000 -> 2000 -> .. 0100 .. -> 1100 -> 2100..')
 
-    startn = int("0000000000000000000000000000000000000000000000000000000000000001", 16)
-    endn = int("0000000000000000000000000000000000000000000000000000000100000000", 16)
+    startn = int("0000000000000000000000000000000000000000000000000000000003cf0961", 16)
+    endn =   int("0000000000000000000000000000000000000000000000000000000100000000", 16)
 
     print('\nstart num:')
     print(startn.to_bytes(32, byteorder='big').hex())
@@ -215,4 +238,17 @@ else:
             f = open(LOGFILENAME,'a')
             f.write(revsnum.to_bytes(32, byteorder='big').hex())
             f.write('\n')
-            
+else: 
+    i=0
+    while True:
+        i=i+1
+        prvnum = os.urandom(32)
+        addr_str = get_addr_from32bytes(prvnum)
+        if check_key(dict_from_csv, addr_str):
+            print('BINGO:', addr_str)
+            get_addr(revsnum, 1)
+        if i % 100000 == 1:
+            logging.info(prvnum.hex())
+            f = open(LOGFILENAME,'a')
+            f.write(prvnum.hex())
+            f.write('\n')
