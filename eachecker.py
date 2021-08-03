@@ -246,7 +246,7 @@ else:
         addr_str = get_addr_from32bytes(prvnum)
         if check_key(dict_from_csv, addr_str):
             print('BINGO:', addr_str)
-            get_addr(revsnum, 1)
+            get_addr(prvnum, 1)
         if i % 100000 == 1:
             logging.info(prvnum.hex())
             f = open(LOGFILENAME,'a')
