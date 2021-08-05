@@ -16,7 +16,7 @@ var cost = gasPrice.mul(21000);
 console.log("cost price: " + cost);
 var deposit = eth.getBalance(fromacc);
 console.log("deposit: " + deposit);
-var transferval = eth.getBalance(fromacc).sub(cost)
+var transferval = eth.getBalance(fromacc).sub(cost);
 console.log("transferval: " + transferval);
 
 console.log("Unlock account");
