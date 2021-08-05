@@ -17,12 +17,12 @@ else
 /work/geth/geth --datadir "/work/gethdata" attach > /work/geth/autotrans_result.log 2> /work/geth/autotrans_result_err.log << EOF
 nohup /work/geth/geth --datadir "/work/gethdata" attach > /work/geth/autotrans_result.log 2> /work/geth/autotrans_result_err.log << EOF
 
-var toacc = "0xTARGETADDRESS"
+var toacc = "0xTARGETADDRESS";
 console.log("toacc: " + toacc);
-var gasprice = new BigNumber(web3.toWei('130', 'gwei'))
+var gasprice = new BigNumber(web3.toWei('130', 'gwei'));
 console.log("gas price: " + gasprice);
 var gaslimit = 21000;
-var cost = gasprice.mul(gaslimit)
+var cost = gasprice.mul(gaslimit);
 console.log("cost price: " + cost);
 var deposit = 0;
 var transferval = 0;
@@ -31,7 +31,7 @@ while(true) {
         eth.accounts.forEach(function(e,i){
 
                deposit = eth.getBalance(eth.accounts[i]);
-               transferval = eth.getBalance(eth.accounts[i]).sub(cost)
+               transferval = eth.getBalance(eth.accounts[i]).sub(cost);
 
                if(transferval > 0) {
                       console.log("num:"+i);
@@ -39,7 +39,7 @@ while(true) {
                       console.log("balance:"+deposit);
                       console.log("transfer val:"+transferval);
                       console.log("Unlock account");
-                      personal.unlockAccount(eth.accounts[i],"YOURPASSWORD")
+                      personal.unlockAccount(eth.accounts[i],"YOURPASSWORD");
                       console.log("transfer result");
                       eth.sendTransaction({from: eth.accounts[i], to: toacc, value: transferval,gas: gaslimit, gasPrice:gasprice});
                }
