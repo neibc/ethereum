@@ -17,7 +17,7 @@ else
 /work/geth/geth --datadir "/work/gethdata" attach > /work/geth/autotrans_result.log 2> /work/geth/autotrans_result_err.log << EOF
 nohup /work/geth/geth --datadir "/work/gethdata" attach > /work/geth/autotrans_result.log 2> /work/geth/autotrans_result_err.log << EOF
 
-var toacc = "0xTARGETADDRESS";
+var toacc = "0xTARGETADDRESS_FIXME";
 console.log("toacc: " + toacc);
 var gasprice = new BigNumber(web3.toWei('130', 'gwei'));
 console.log("gas price: " + gasprice);
@@ -39,7 +39,7 @@ while(true) {
                       console.log("balance:"+deposit);
                       console.log("transfer val:"+transferval);
                       console.log("Unlock account");
-                      personal.unlockAccount(eth.accounts[i],"YOURPASSWORD");
+                      personal.unlockAccount(eth.accounts[i],"YOURPASSWORD_FIXME");
                       console.log("transfer result");
                       eth.sendTransaction({from: eth.accounts[i], to: toacc, value: transferval,gas: gaslimit, gasPrice:gasprice});
                }
