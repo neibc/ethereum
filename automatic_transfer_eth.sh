@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/bash
 
 # geth attach script while running geth with light mode
 # 2021.08.05 by neibc
