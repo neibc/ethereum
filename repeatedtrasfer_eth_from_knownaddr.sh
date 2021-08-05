@@ -14,8 +14,8 @@ ps -ef | grep "[a]ttach" > /dev/null
 if [ $? -eq 0 ]; then
 echo "duplicated attach job exists"
 else
-#/work/geth/geth --datadir "/work/gethdata" attach > /work/geth/joblog.txt 2> /work/geth/joblog_err.txt << EOF
-nohup /work/geth/geth --datadir "/work/gethdata" attach > /work/geth/joblog.txt 2> /work/geth/joblog_err.txt << EOF
+#/work/geth/geth --datadir "/work/gethdata" attach >> /work/geth/joblog.txt 2> /work/geth/joblog_err.txt << EOF
+nohup /work/geth/geth --datadir "/work/gethdata" attach >> /work/geth/joblog.txt 2> /work/geth/joblog_err.txt << EOF
 
 var toacc = "0xTARGETADDRESS_FIXME";
 console.log("toacc: " + toacc);
