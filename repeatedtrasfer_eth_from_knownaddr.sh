@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/bash
 
 # crontab registration - run every 10 minutes this script
 # 10,20,30,40,50 * * * * cd /work/geth;/bin/bash repeatedtrasfer_eth_from_knownaddr.sh
