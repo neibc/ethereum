@@ -5,8 +5,8 @@
 
 /work/geth/geth --datadir "/work/gethdata" attach << EOF
 
-var fromacc = "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf";
-var toacc = "0xYOURADDR";
+var fromacc = "0xYOURSOURCEADDR";
+var toacc = "0xYOURTARGETADDR";
 
 console.log("fromacc: " + fromacc);
 console.log("toacc: " + toacc);
