@@ -10,9 +10,10 @@ var toacc = "0xYOURTARGETADDR";
 
 console.log("fromacc: " + fromacc);
 console.log("toacc: " + toacc);
-var gasPrice = new BigNumber(web3.toWei('35', 'gwei'));
-console.log("gas price: " + gasPrice);
-var cost = gasPrice.mul(21000);
+var gasprice = new BigNumber(web3.toWei('35', 'gwei'));
+console.log("gas price: " + gasprice);
+var gaslimit = 21000;
+var cost = gasprice.mul(gaslimit);
 console.log("cost price: " + cost);
 var deposit = eth.getBalance(fromacc);
 console.log("deposit: " + deposit);
@@ -24,7 +25,7 @@ personal.unlockAccount(fromacc,"YOURPASSWORD");
 
 if(transferval > 0) {
   console.log("transfer result");
-  eth.sendTransaction({from: fromacc, to: toacc, value: transferval});
+  eth.sendTransaction({from: fromacc, to: toacc, value: transferval, gas: gaslimit, gasPrice: gasprice});
 } else {
   console.log("no balance");
 }
