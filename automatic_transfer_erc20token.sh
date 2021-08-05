@@ -2,12 +2,12 @@
 
 ./geth --datadir "/work/gethdata" attach << EOF
 
-var fromacc = "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf"
-var toacc = "0xYOURADDRESS"
+var fromacc = "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf";
+var toacc = "0xYOURADDRESS";
 
-var gasPrice = new BigNumber(web3.toWei('40', 'gwei'))
+var gasPrice = new BigNumber(web3.toWei('40', 'gwei'));
 console.log("gas price: " + gasPrice);
-var cost = gasPrice.mul(21000)
+var cost = gasPrice.mul(21000);
 console.log("cost price: " + cost);
 
 var minereumAbi = [{"constant":true,"inputs":[],"name":"mintingFinished","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs
@@ -43,7 +43,7 @@ console.log("depositval: " + depositval);
 // need to check the value first before sending them
 if(depositval > 1000) {
 console.log("Unlock account");
-personal.unlockAccount(fromacc,"YOURPASSWORD")
+personal.unlockAccount(fromacc,"YOURPASSWORD");
 var valone = web3.fromWei(minereumContract.balanceOf(fromacc));
 console.log("minereum balance: " + valone);
 minereumContract.transfer(toacc,web3.toWei(valone),{from:fromacc});
