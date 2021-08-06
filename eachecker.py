@@ -68,7 +68,7 @@ def get_addr(priv_int, isprint=0):
         print("Public key: ", pub.hex())
         print("Address0:   ", addr)
         f = open(LOGFILENAME,'a')
-        f.write('private_key:')
+        f.write('BINGO private_key:')
         f.write(priv.to_string().hex())
         f.write('\n')
         f.write('addr:')
