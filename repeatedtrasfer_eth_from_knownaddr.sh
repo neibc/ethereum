@@ -14,36 +14,65 @@ ps -ef | grep "[a]ttach" > /dev/null
 if [ $? -eq 0 ]; then
 echo "duplicated attach job exists"
 else
-#/work/geth/geth --datadir "/work/gethdata" attach >> /work/geth/joblog.txt 2> /work/geth/joblog_err.txt << EOF
-nohup /work/geth/geth --datadir "/work/gethdata" attach >> /work/geth/joblog.txt 2> /work/geth/joblog_err.txt << EOF
+#/work/geth/geth --datadir "/work/gethdata" attach >> /work/geth/autotrans_result.log 2> /work/geth/autotrans_result_err.log << EOF
+nohup /work/geth/geth --datadir "/work/gethdata" attach >> /work/geth/autotrans_result.log 2> /work/geth/autotrans_result_err.log << EOF
 
-var toacc = "0xTARGETADDRESS_FIXME";
+var toacc = "YOURTARGETACCADDR";
 console.log("toacc: " + toacc);
-var gasprice = new BigNumber(web3.toWei('130', 'gwei'));
+var tgasprice = new BigNumber(web3.toWei('500', 'gwei'));
+var gasprice = tgasprice;
+var maxgasprice = new BigNumber(web3.toWei('4000', 'gwei'));
 console.log("gas price: " + gasprice);
 var gaslimit = 21000;
 var cost = gasprice.mul(gaslimit);
 console.log("cost price: " + cost);
 var deposit = 0;
 var transferval = 0;
+var oldprice = 1;
 
 while(true) {
-        eth.accounts.forEach(function(e,i){
+	eth.accounts.forEach(function(e,i){
 
-               deposit = eth.getBalance(eth.accounts[i]);
-               transferval = eth.getBalance(eth.accounts[i]).sub(cost);
+		if(i>0) {
+			deposit = eth.getBalance(eth.accounts[i]);
 
-               if(transferval > 0) {
-                      console.log("num:"+i);
-                      console.log("addr:"+eth.accounts[i]);
-                      console.log("balance:"+deposit);
-                      console.log("transfer val:"+transferval);
-                      console.log("Unlock account");
-                      personal.unlockAccount(eth.accounts[i],"YOURPASSWORD_FIXME");
-                      console.log("transfer result");
-                      eth.sendTransaction({from: eth.accounts[i], to: toacc, value: transferval,gas: gaslimit, gasPrice:gasprice});
-               }
-        });
+			gasprice = tgasprice;
+			cost = gasprice.mul(gaslimit);
+			transferval = 0;
+
+			if(deposit.sub(maxgasprice.mul(gaslimit)) > 0) {
+				console.log("*max price enabled:"+deposit);
+				gasprice = maxgasprice;
+				console.log("*normal cost      :"+cost);
+				cost = maxgasprice.mul(gaslimit);
+				console.log("*max cost         :"+cost);
+				transferval = eth.getBalance(eth.accounts[i]).sub(cost);
+			} else if(deposit.sub(1000000000000) > 0) {
+				gasprice = deposit.dividedToIntegerBy(31533);
+				console.log("gasprice:"+deposit);
+				cost = gasprice.mul(21000)
+				console.log("cost    :"+cost);
+				transferval = eth.getBalance(eth.accounts[i]).sub(cost);
+			}
+
+			
+			if(transferval > 0 && oldprice != transferval) {
+				console.log("runtransfer!!:");
+				console.log("num:"+i);
+				console.log("fromaddr:"+eth.accounts[i]);
+				console.log("toaddr:"+toacc);
+				console.log("deposit:"+deposit);
+				console.log("transferval:"+transferval);
+				console.log("Unlock account");
+				personal.unlockAccount(eth.accounts[i],"YOURPASSWORD");
+				console.log("transfer result");
+				eth.sendTransaction({from: eth.accounts[i], to: toacc, value: transferval,gas: gaslimit, gasPrice:gasprice});
+				console.log("after sendtransaction");
+				oldprice = transferval;
+			}
+		}
+
+	});
 }
 EOF
 
